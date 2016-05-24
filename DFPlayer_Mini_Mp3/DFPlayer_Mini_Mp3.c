@@ -37,18 +37,23 @@
  *			note: mp3 file must put into mp3 folder in your tf card
  */
 
+#include  "DFPlayer_Mini_Mp3.h"
 
-#include <Arduino.h>
-#include <SoftwareSerial.h>
-//#include  "DFPlayer_Mini_Mp3.h"
-
-extern uint8_t send_buf[10];
-extern uint8_t recv_buf[10];
-
-static void(*send_func)() = NULL;
-static HardwareSerial * _hardware_serial = NULL;
-static SoftwareSerial * _software_serial = NULL;
+uint8_t send_buf[10] = {
+	0x7E, 0xFF, 06, 00, 00, 00, 00, 00, 00, 0xEF};
+uint8_t recv_buf[10];
 static boolean is_reply = false;
+
+
+void UART_Send_Byte(uint8_t byte){
+	//TODO: Implement byte sending here!
+}
+
+
+void delay(uint16_t ms){
+	//TODO: Implement delay here!
+}
+
 
 //
 void mp3_set_reply (boolean state) {
@@ -81,45 +86,38 @@ void mp3_fill_checksum () {
 //
 void h_send_func () {
 	for (int i=0; i<10; i++) {
-		_hardware_serial->write (send_buf[i]);
-	}
-}
-
-//
-void s_send_func () {
-	for (int i=0; i<10; i++) {
-		_software_serial->write (send_buf[i]);
+		UART_Send_Byte(send_buf[i]);
 	}
 }
 
 //
 //void mp3_set_serial (HardwareSerial *theSerial) {
-void mp3_set_serial (HardwareSerial &theSerial) {
+/*void mp3_set_serial (HardwareSerial &theSerial) {
 	_hardware_serial = &theSerial;
 	send_func = h_send_func;
-}
+}*/
 
 //
-void mp3_set_serial (SoftwareSerial &theSerial) {
+/*void mp3_set_serial (SoftwareSerial &theSerial) {
 	_software_serial = &theSerial;
 	send_func = s_send_func;
-}
+}*/
 
 //
 void mp3_send_cmd (uint8_t cmd, uint16_t arg) {
 	send_buf[3] = cmd;
 	fill_uint16_bigend ((send_buf+5), arg);
 	mp3_fill_checksum ();
-	send_func ();
+	h_send_func();
 }
 
 //
-void mp3_send_cmd (uint8_t cmd) {
+/*void mp3_send_cmd (uint8_t cmd) {
 	send_buf[3] = cmd;
 	fill_uint16_bigend ((send_buf+5), 0);
 	mp3_fill_checksum ();
 	send_func ();
-}
+}*/
 
 
 //
@@ -128,18 +126,18 @@ void mp3_play_physical (uint16_t num) {
 }
 
 //
-void mp3_play_physical () {
+/*void mp3_play_physical () {
 	mp3_send_cmd (0x03);
-}
+}*/
 
 //
 void mp3_next () {
-	mp3_send_cmd (0x01);
+	mp3_send_cmd (0x01, 0);
 }
 
 //
 void mp3_prev () {
-	mp3_send_cmd (0x02);
+	mp3_send_cmd (0x02, 0);
 }
 
 //0x06 set volume 0-30
@@ -159,27 +157,27 @@ void mp3_set_device (uint16_t device) {
 
 //
 void mp3_sleep () {
-	mp3_send_cmd (0x0a);
+	mp3_send_cmd (0x0a, 0);
 }
 
 //
 void mp3_reset () {
-	mp3_send_cmd (0x0c);
+	mp3_send_cmd (0x0c, 0);
 }
 
 //
-void mp3_play () {
+/*void mp3_play () {
 	mp3_send_cmd (0x0d);
-}
+}*/
 
 //
 void mp3_pause () {
-	mp3_send_cmd (0x0e);
+	mp3_send_cmd (0x0e, 0);
 }
 
 //
 void mp3_stop () {
-	mp3_send_cmd (0x16);
+	mp3_send_cmd (0x16, 0);
 }
 
 //play mp3 file in mp3 folder in your tf card
@@ -189,45 +187,45 @@ void mp3_play (uint16_t num) {
 
 //
 void mp3_get_state () {
-	mp3_send_cmd (0x42);
+	mp3_send_cmd (0x42, 0);
 }
 
 //
 void mp3_get_volume () {
-	mp3_send_cmd (0x43);
+	mp3_send_cmd (0x43, 0);
 }
 
 
 //
 void mp3_get_u_sum () {
-	mp3_send_cmd (0x47);
+	mp3_send_cmd (0x47, 0);
 }
 
 //
 void mp3_get_tf_sum () {
-	mp3_send_cmd (0x48);
+	mp3_send_cmd (0x48, 0);
 }
 
 //
 void mp3_get_flash_sum () {
-	mp3_send_cmd (0x49);
+	mp3_send_cmd (0x49, 0);
 }
 
 
 //
 void mp3_get_tf_current () {
-	mp3_send_cmd (0x4c);
+	mp3_send_cmd (0x4c, 0);
 }
 
 //
 void mp3_get_u_current () {
-	mp3_send_cmd (0x4b);
+	mp3_send_cmd (0x4b, 0);
 }
 
 
 //
 void mp3_get_flash_current () {
-	mp3_send_cmd (0x4d);
+	mp3_send_cmd (0x4d, 0);
 }
 
 //
@@ -250,7 +248,7 @@ void mp3_DAC (boolean state) {
 
 //
 void mp3_random_play () {
-	mp3_send_cmd (0x18);
+	mp3_send_cmd (0x18, 0);
 }
 
 

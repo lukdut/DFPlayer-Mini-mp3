@@ -39,12 +39,13 @@
  *	Description:			mp3 library for DFPlayer mini board
  *					note: mp3 file must put into mp3 folder in your tf card
  */
-#include "Arduino.h"
-#include "SoftwareSerial.h"
 
-uint8_t send_buf[10] = {
-	0x7E, 0xFF, 06, 00, 00, 00, 00, 00, 00, 0xEF};
-uint8_t recv_buf[10];
+#include <stdint.h>
+#define false 0
+#define true 1
+typedef unsigned char boolean;
+
+
 
 //* void(*send_func)() = NULL;
 //* HardwareSerial *hserial = NULL;
@@ -64,7 +65,7 @@ uint8_t recv_buf[10];
 void mp3_set_reply (boolean state); 
 
 void mp3_fill_cmd (uint8_t cmd, uint16_t arg);
-void mp3_fill_cmd (uint8_t cmd);
+void mp3_fill_cmd_noarg (uint8_t cmd);
 
 //
 //void fill_uint16_bigend (uint8_t *thebuf, uint16_t data);
@@ -75,10 +76,10 @@ void mp3_fill_cmd (uint8_t cmd);
 //}
 
 //
-void mp3_set_serial (HardwareSerial &theSerial); 
+//void mp3_set_serial (HardwareSerial &theSerial);
 
 //
-void mp3_set_serial (SoftwareSerial &theSerial); 
+//void mp3_set_serial (SoftwareSerial &theSerial);
 
 //
 //void h_send_func (); 
@@ -97,7 +98,7 @@ void mp3_fill_checksum ();
 
 //
 void mp3_play_physical (uint16_t num); 
-void mp3_play_physical (); 
+
 
 //
 void mp3_next (); 
@@ -125,9 +126,6 @@ void mp3_pause ();
 
 //
 void mp3_stop (); 
-
-//
-void mp3_play (); 
 
 //specify a mp3 file in mp3 folder in your tf card, "mp3_play (1);" mean play "mp3/0001.mp3"
 void mp3_play (uint16_t num); 
@@ -167,3 +165,5 @@ void mp3_DAC (boolean state);
 //
 void mp3_random_play (); 
 
+void UART_Send_Byte(uint8_t byte);
+void delay(uint16_t ms);
